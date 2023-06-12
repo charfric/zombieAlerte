@@ -1,6 +1,7 @@
 # Alerter face à une menace zombie
 
 ## Tables des matières
+
 1. [Introduction](#introduction)
 2. [Partie Software](#partie-software)
 4. [Partie Hardware et intégration](#partie-hardware-et-intégration)
@@ -11,6 +12,8 @@
 
 ## Introduction
 ***
+
+
 Pendant 40 heures, nous avons été enfermés dans le laboratoire d'électronique de l'ENSEA car l'école était assiégée par une horde de zombies mutants. Notre équipe était chargée de communiquer avec l'extérieur et d'alerter les potentiels survivants de notre présence dans l'école. 
 
 Plusieurs moyens de communication étaient envisageables comme un signal lumineux ou un haut-parleur mais nous avons choisi de transmettre notre position par radio FM. 
@@ -23,19 +26,23 @@ Notre équipe:
 * Mamour Sarr: Responsable hardware
 
 
+Le diagramme de Gantt est un outil qui nous a permit de savoir quand et par qui les tâches étaient effectuées:
+
 ![image](https://github.com/charfric/zombieAlerte/assets/131167268/99f67354-4a6b-4ab1-90fe-083f3215a94f)
 
-Le diagramme de Gantt est un outil qui nous a permit de savoir quand et par qui les tâches étaient effectuées. 
 
+
+Schéma synoptique:
 
 ![image](https://github.com/charfric/zombieAlerte/assets/131167268/bb358cb1-8307-4a8a-9511-236f46ea0c3f)
 
-Le système est alimenté par une pile 9V.
-Le module de transmission et l'écran OLED sont connectés au microcontroleur STM32 H7A3 par bus I2C et le module GPS via une communication UART. Le microcontrôleur communique avec le module via la liaison UART
+
+Le système est alimenté par une pile 9V. Le microcontrôleur communique avec le module GPS via la liaison UART. Le module de transmission et l'écran OLED sont eux connectés au microcontrôleur STM32 H7A3 par bus I2C. 
 
 
 ## Partie software
 ***
+
 
 #### 1. Introduction
 
@@ -377,8 +384,9 @@ L'objectif final était de coder les données GPS en morse pour les transmettre 
 Dans le cadre de notre projet, la partie hardware a consisté à réaliser le schéma global et le routage de notre carte électronique. Pour concevoir notre PCB (Printed Circuit Board), nous avons utilisé le logiciel Kicad. 
 
 
+Pour l'écran, le module GPS et l'alimentation, nous avons placé 3 connecteurs JST sur le PCB. Comme nous n'avons pas trouvé une empreinte correspondant à notre microcontrôleur, nous avons dû la créer par nous-même en ajoutant les ports dont nous avions besoin. L'interrupteur que nous avons choisi est le GT11MSABETR, nous l'avons connecté à une LED pour pouvoir vérifier quand il est sur ON. 
 
-Pour l'écran, le module GPS et l'alimentation, nous avons placé 3 connecteurs. 
+
 ![image](https://github.com/charfric/zombieAlerte/assets/131167268/e4ee2714-3d4f-49ac-8e07-b9a54489b3b3)
 
 
@@ -390,6 +398,7 @@ Pour l'écran, le module GPS et l'alimentation, nous avons placé 3 connecteurs.
 ## Guide d'utilisation
 ***
 
+
 1. Mettre l'alimentation et l'interrupteur sur ON 
 2. Appuyer sur le bouton bleu de la STM32 (bouton reset)
 3. Attendre quelques instants que la latitude et la longitude apparaissent sur l'écran (de préférence à l'extérieur)
@@ -399,6 +408,7 @@ Pour l'écran, le module GPS et l'alimentation, nous avons placé 3 connecteurs.
 
 ## Conclusion
 ***
+
 
 Même si nous avons pris du retard à cause de quelques difficultés avec le module radio et dans la conception du PCB, nous avons réussi à atteindre les objectifs que nous nous étions fixés, c'est-à-dire concevoir un système capable de transmettre une position par radio FM. 
 
