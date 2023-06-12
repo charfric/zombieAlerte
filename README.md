@@ -31,7 +31,7 @@ Le diagramme de Gantt est un outil qui nous a permit de savoir quand et par qui 
 ![image](https://github.com/charfric/zombieAlerte/assets/131167268/bb358cb1-8307-4a8a-9511-236f46ea0c3f)
 
 Le système est alimenté par une pile 9V.
-Le module de transmission et l'écran OLED sont connectés au microcontroleur STM32 H7A3 par I2C et le module GPS par UART. 
+Le module de transmission et l'écran OLED sont connectés au microcontroleur STM32 H7A3 par bus I2C et le module GPS via une communication UART. Le microcontrôleur communique avec le module via la liaison UART
 
 
 ## Partie software
@@ -76,9 +76,9 @@ $GPGGA       : Type de trame
 
 
 
-Le programme cherche analyse toute les trames reçu dans le but de garder qu'une trame de ce type (car il y a également d'autres types de trames comme la trame **RMC**,  utilisés pour la navigation des bateaux). On souhaite doit également éliminer les trames vide ou incomplète: Le signal reçu est très faible, car il a été atténué par l'atmosphère et les nuages, il arrive donc que des données se perdent en chemin. Un check-sum est prévu dans la trame pour vérifier si elle est complète ou non. 
+Le programme cherche, analyse toute les trames reçues dans le but de garder qu'une trame de ce type (car il y a également d'autres types de trames comme la trame **RMC**,  utilisée pour la navigation des bateaux). On souhaite également éliminer les trames vides ou incomplètes. Le signal reçu est très faible, car il a été atténué par l'atmosphère et les nuages, il arrive donc que des données se perdent en chemin. Un check-sum est prévu dans la trame pour vérifier si elle est complète ou non. 
 
-Notez que le module GPS rencontre de nombreux problèmes pour trouver sa position lors des journées très nuageuse. 
+Notez que le module GPS rencontre de nombreux problèmes pour trouver sa position lors des journées très nuageuse.
 
 
 
@@ -152,11 +152,11 @@ char* extractSubstring(const char* inputString, int firstCharPos, int lastCharPo
 
 
 
-Ce code simple nous permet de récupérer uniquement les trames complètes. Pour faire simple, on évalue la justesse de la trame en cherchant dans la trame reçue des éléments caractéristiques de cette dernière, comme la position dans la trame de certains caractères. Cette méthode peut sembler de prime abord un peu simpliste, voir incomplète mais dans la réalité des faits, le check-sum n'est jamais à vérifier, car toujours juste (pour une trame non vide). De plus le fait d'utiliser des caractères de repère nous permet d'extraire plus facilement les données de position. 
+Ce code nous permet de récupérer uniquement les trames complètes. Pour faire simple, on évalue la justesse de la trame en cherchant dans la trame reçue des éléments caractéristiques de cette dernière, comme la position dans la trame de certains caractères. Cette méthode peut sembler de prime abord un peu simpliste, voir incomplète mais dans la réalité des faits, le check-sum n'est jamais à vérifier, car toujours juste (pour une trame non vide). De plus le fait d'utiliser des caractères de repère nous permet d'extraire plus facilement les données de position. 
 
 
 
-Le microcontrôleur communique avec le module via la liaison UART. Pour mémoire, la liaison UART est une liaison série asynchrone, communiquant sous forme de trame de données  (comme ci-dessous) avec un périphérique:
+Le microcontrôleur communique avec le module via la liaison UART. Pour mémoire, la liaison UART est une liaison série asynchrone, communiquant sous forme de trame de données (comme ci-dessous) avec un périphérique:
 
 
 
@@ -172,7 +172,7 @@ Pour veiller au bon fonctionnement du module, il est important de fixer la vites
 
 Pour gagner du temps, nous avons utlisé pour l'affichage de données sur l'écran une bibliothèque de police d'écriture: l'utilisation d'une telle bibliothèque nous évite de devoir gérer l'affichage de données pixels par pixels. Ainsi nous avons des fonctions prêtes à l'emploi pour écrire du texte, tracer des formes géométriques simples, actualiser l'écran ou même effacer tout le contenu affiché. Pour plus de détails sur cette libraire, merci de vous référer au code complet disponible sur GitHub. 
 
-Voici un exemple comment se passe l'affichage des données GPS sur l'écran: 
+Voici un exemple de comment se passe l'affichage des données GPS sur l'écran: 
 
 ```c
 ssd1306_Init();
@@ -201,7 +201,7 @@ Information pratique sur la bibliothèque: librairie **ssd1306** pour **STM32** 
 
 
 
-L'écran est contrôlé via le bus I2C. Un peu plus bas se trouve une partie expliquant le fonctionnement du bus I2C un peu plus en détail. 
+L'écran est contrôlé via le bus I2C. Un peu plus bas se trouve une partie expliquant le fonctionnement du bus I2C plus en détail. 
 
 
 
@@ -314,7 +314,7 @@ do{
 
 
 
-Cette partie du programme nous a donné beaucoup de fil à retordre: la documentation du composant était relativement complexe, et parfois incomplète, nous avons avancé en tâtonnant. C'est notamment le `GET INT STATUS 0x14` qui nous a posé problème, car il ne nous retournait jamais le bon code de retour, à savoir `0x81`. Nous avons également utilisé un analyseur de spectre pour savoir si le module émettait quelque chose, et de vérifier si ce n'était pas notre récepteur qui ne fonctionnait pas.
+Cette partie du programme nous a donné beaucoup de fil à retordre: la documentation du composant était relativement complexe, et parfois incomplète, nous avons avancé en tâtonnant. C'est notamment le `GET INT STATUS 0x14` qui nous a posé problème, car il ne nous retournait jamais le bon code de retour, à savoir `0x81`. Nous avons également utilisé un analyseur de spectre pour savoir si le module émettait quelque chose et vérifier si ce n'était pas notre récepteur qui ne fonctionnait pas.
 
 Ci-dessous se trouve une capture de l'analyseur de spectre lors d'une émission:
 
@@ -374,16 +374,16 @@ L'objectif final était de coder les données GPS en morse pour les transmettre 
 ## Partie Hardware et intégration
 ***
 
-![image](https://github.com/charfric/zombieAlerte/assets/131167268/e4ee2714-3d4f-49ac-8e07-b9a54489b3b3)
+Dans le cadre de notre projet, la partie hardware a consisté à réaliser le schéma global et le routage de notre carte électronique. Pour concevoir notre PCB (Printed Circuit Board), nous avons utilisé le logiciel Kicad. 
 
-Pour concevoir le PCB de notre projet, nous avons utilisé le logiciel Kicad. 
+
 
 Pour l'écran, le module GPS et l'alimentation, nous avons placé 3 connecteurs. 
+![image](https://github.com/charfric/zombieAlerte/assets/131167268/e4ee2714-3d4f-49ac-8e07-b9a54489b3b3)
+
 
 ![image](https://github.com/charfric/zombieAlerte/assets/131167268/9ea12099-3afa-4211-b86a-64b5ce62e172)
  
-
-écran Oled + GPS + transmetteur 
 
 
 
