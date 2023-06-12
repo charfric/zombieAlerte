@@ -327,7 +327,8 @@ Ci-dessous se trouve une capture de l'analyseur de spectre lors d'une émission:
 
 
 
-// Photo
+![image](https://github.com/charfric/zombieAlerte/assets/131167268/7b4a278a-0b9d-49e4-be82-189d6251cd52)
+
 
 
 
